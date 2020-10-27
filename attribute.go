@@ -23,6 +23,11 @@ func (attrib *Attribute) Open() (err error) {
 	return err
 }
 
+func (attrib *Attribute) OpenWO() (err error) {
+	attrib.File, err = os.OpenFile(attrib.Path, os.O_WRONLY|syscall.O_NONBLOCK, 0660)
+	return err
+}
+
 func (attrib *Attribute) OpenRO() (err error) {
 	attrib.File, err = os.OpenFile(attrib.Path, os.O_RDONLY|syscall.O_NONBLOCK, 0666)
 	return err
@@ -74,7 +79,7 @@ func (attrib *Attribute) Read() (str string, err error) {
 
 func (attrib *Attribute) Write(value string) (err error) {
 	if attrib.File == nil {
-		err = attrib.Open()
+		err = attrib.OpenWO()
 		if err != nil {
 			return
 		}
